@@ -1,7 +1,16 @@
 package model.logic;
 
+import java.io.File;
+import java.io.FileReader;
+
 import model.data_structures.ArregloDinamico;
-import model.data_structures.IArregloDinamico;
+import model.data_structures.Comparendo;
+import model.data_structures.IListaEncadenada;
+
+import com.google.gson.*;
+import com.google.gson.stream.JsonReader;
+
+
 
 /**
  * Definicion del modelo del mundo
@@ -11,25 +20,40 @@ public class Modelo {
 	/**
 	 * Atributos del modelo del mundo
 	 */
-	private IArregloDinamico datos;
+	private IListaEncadenada datos;
+	
 	
 	/**
 	 * Constructor del modelo del mundo con capacidad predefinida
 	 */
 	public Modelo()
 	{
-		datos = new ArregloDinamico(7);
+		datos = (IListaEncadenada) datos.darPrimero();
 	}
+	
+	
 	
 	/**
 	 * Constructor del modelo del mundo con capacidad dada
 	 * @param tamano
 	 */
-	public Modelo(int capacidad)
+
+	
+	public JsonObject processingJSONFile(File pArchivo) 
 	{
-		datos = new ArregloDinamico(capacidad);
+		JsonObject json=null;
+		try{
+			Gson g = new Gson();
+			FileReader archivo = new FileReader(pArchivo);
+			JsonReader r = new JsonReader (archivo);
+			json = g.fromJson(r, JsonObject.class);
+		}catch(Exception e){
+			System.out.println(e.getMessage());
+		}
+		return json;
 	}
 	
+
 	/**
 	 * Servicio de consulta de numero de elementos presentes en el modelo 
 	 * @return numero de elementos presentes en el modelo
@@ -43,7 +67,7 @@ public class Modelo {
 	 * Requerimiento de agregar dato
 	 * @param dato
 	 */
-	public void agregar(String dato)
+	public void agregar(Comparendo dato)
 	{	
 		datos.agregar(dato);
 	}
@@ -53,7 +77,7 @@ public class Modelo {
 	 * @param dato Dato a buscar
 	 * @return dato encontrado
 	 */
-	public String buscar(String dato)
+	public Comparendo buscar(Comparendo dato)
 	{
 		return datos.buscar(dato);
 	}
@@ -63,10 +87,9 @@ public class Modelo {
 	 * @param dato Dato a eliminar
 	 * @return dato eliminado
 	 */
-	public String eliminar(String dato)
+	public Comparendo eliminar(Comparendo dato)
 	{
 		return datos.eliminar(dato);
 	}
-
-
+	
 }
